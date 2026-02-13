@@ -7,20 +7,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 html, body{
-    margin:0;
-    padding:0;
-    height:100%;
+    margin:0; padding:0;
     font-family:'Cairo',sans-serif;
-    background:#f0f0f0;
+    height:100%;
 }
 body{
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:flex-start;
-    width:100%;
-    min-height:100vh;
-    box-sizing:border-box;
+    background:#f0f0f0;
 }
 
 /* شاشة الترحيب */
@@ -39,42 +35,43 @@ body{
 }
 #welcomeScreen div{
     color:red;
-    font-size:4vw;
+    font-size:3em;
     font-weight:bold;
-    margin-bottom:30px;
 }
 #welcomeScreen button{
-    padding:14px 25px;
+    padding:12px 25px;
     font-size:1.5em;
+    margin-top:30px;
     cursor:pointer;
     background:linear-gradient(45deg,#ff9800,#ff5722);
     color:white;
     border:none;
     border-radius:10px;
 }
+
 /* الحاوية الرئيسية */
 .container{
+    width:100%;
+    max-width:1000px;
+    margin-top:20px;
+    padding:20px;
     display:none;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-start;
-    width:100%;
-    min-height:100vh;
-    box-sizing:border-box;
-    padding:10px;
 }
+
 /* البطاقة */
 .card{
     width:90%;
-    max-width:400px;
-    height:220px;
-    margin:20px auto 10px auto;
+    max-width:360px;
+    height:210px;
     display:flex;
     border-radius:14px;
     overflow:hidden;
     box-shadow:0 10px 25px rgba(0,0,0,0.3);
     position:relative;
     transition:0.3s;
+    margin-bottom:15px;
     background: linear-gradient(135deg,#4caf50 0%,#ffffff 50%,#f44336 100%);
 }
 .left{
@@ -119,37 +116,35 @@ body{
     padding:4px;
     border-radius:6px;
 }
-/* الأزرار تحت البطاقة */
-.card-buttons{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    margin-bottom:15px;
-}
-.card-buttons button{
-    flex:1;
-    max-width:180px;
-    padding:10px;
-}
+
 /* الفورم */
 .form{
     background:#fff;
     padding:15px;
     border-radius:12px;
     box-shadow:0 5px 15px rgba(0,0,0,0.2);
-    margin-bottom:20px;
     width:90%;
-    max-width:400px;
-    box-sizing:border-box;
+    max-width:500px;
+    margin-bottom:30px;
 }
 input,textarea,select{
-    width:100%;
+    width:95%;
     padding:8px;
     margin:6px 0;
     border-radius:6px;
     border:1px solid #ccc;
-    box-sizing:border-box;
 }
+button{
+    padding:10px 15px;
+    margin-top:10px;
+    background:linear-gradient(45deg,#ff9810,#ff5722);
+    border:none;
+    color:white;
+    font-weight:bold;
+    border-radius:8px;
+    cursor:pointer;
+}
+
 /* اختيار الألوان */
 .color-picker{
     display:flex;
@@ -160,7 +155,6 @@ input,textarea,select{
     border:2px solid #2196f3;
     border-radius:8px;
     background:linear-gradient(90deg,#bbdefb,#e3f2fd);
-    font-size:0.9em;
 }
 .color-picker label{
     font-weight:bold;
@@ -168,13 +162,14 @@ input,textarea,select{
 .color-picker select{
     width:50%;
 }
+
 /* أيقونات التواصل */
 #socialLinks{
     display:flex;
     justify-content:center;
     gap:40px;
     font-size:3em;
-    margin-top:10px;
+    margin-top:20px;
 }
 #socialLinks a{
     transition: transform 0.3s;
@@ -182,18 +177,29 @@ input,textarea,select{
 #socialLinks a:hover{
     transform: scale(1.2);
 }
+
+/* متجاوب */
+@media(max-width:480px){
+    .card{flex-direction:column;height:auto;padding:10px;}
+    .left,.right{width:100%;text-align:center;}
+    .right h2{font-size:14px;}
+    .right p{font-size:11px;}
+}
 </style>
 </head>
 <body>
+
 <!-- شاشة الترحيب -->
 <div id="welcomeScreen">
-    <div>مرحبا بكم في قوالب Ali.dz</div>
+    <div>مرحبا بكم في قوالب <br>Ali.dz</div>
     <button onclick="enterApp()">دخول</button>
 </div>
+
 <!-- الحاوية الرئيسية -->
 <div class="container" id="mainApp">
 
-<!-- البطاقة -->
+<h2>Ali Cards Platform - مولد بطاقات</h2>
+
 <div class="card" id="card">
     <div class="left" id="leftSide">
         <img id="logoPreview">
@@ -208,20 +214,17 @@ input,textarea,select{
         <div id="qrcode"></div>
     </div>
 </div>
-<!-- أزرار البطاقة -->
-<div class="card-buttons">
-    <button onclick="generateCard()">تحديث البطاقة</button>
-    <button onclick="downloadCard()">تحميل PNG</button>
-</div>
-<!-- الفورم -->
+
 <div class="form">
 <input id="company" placeholder="اسم المؤسسة">
 <input id="person" placeholder="اسم الشخص">
 <input id="job" placeholder="المنصب">
 <input id="phone" placeholder="الهاتف">
 <textarea id="desc" placeholder="وصف مختصر"></textarea>
+
 <label>رفع شعار البطاقة</label>
 <input type="file" accept="image/*" onchange="loadLogo(event)">
+
 <div class="color-picker">
 <label>لون الجهة اليمنى</label>
 <select id="rightColorSelect" onchange="updateColors()">
@@ -233,6 +236,7 @@ input,textarea,select{
 <option value="#607d8b">رمادي</option>
 </select>
 </div>
+
 <div class="color-picker">
 <label>لون الجهة اليسرى</label>
 <select id="leftColorSelect" onchange="updateColors()">
@@ -242,6 +246,7 @@ input,textarea,select{
 <option value="#c8e6c9">أخضر فاتح</option>
 </select>
 </div>
+
 <div class="color-picker">
 <label>لون النص</label>
 <select id="textColorSelect" onchange="updateColors()">
@@ -252,10 +257,11 @@ input,textarea,select{
 <option value="#4caf50">أخضر</option>
 </select>
 </div>
+
 <div class="color-picker">
 <label>اختيار قالب المؤسسة</label>
 <select id="templateSelect" onchange="updateTemplate()">
-<option value="none">لا شيء</option>
+<option value="">لا شيء</option>
 <option value="vet">بيطرية</option>
 <option value="law">محاماة</option>
 <option value="hair">حلاقة</option>
@@ -269,30 +275,42 @@ input,textarea,select{
 <option value="pharmacy">صيدلة</option>
 <option value="glass">زجاج</option>
 <option value="dentist">طب أسنان</option>
+<option value="oilSale">بيع وشحن الزيوت</option>
 </select>
 </div>
+
+<div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
+<button onclick="generateCard()">تحديث البطاقة</button>
+<button onclick="downloadCard()">تحميل PNG</button>
 </div>
-<!-- أيقونات التواصل -->
+
 <div id="socialLinks">
-    <a href="https://wa.me/2136671720653" target="_blank" style="color:#25D366;">📱</a>
-    <a href="mailto:algeriancitizen14@gmail.com" style="color:#D44638;">✉️</a>
-    <a href="https://www.facebook.com/profile.php?id=61586367822913" target="_blank" style="color:#1877F2;">📘</a>
+<a href="https://wa.me/2136671720653" target="_blank" style="color:#25D366;">📱</a>
+<a href="mailto:algeriancitizen14@gmail.com" style="color:#D44638;">✉️</a>
+<a href="https://www.facebook.com/profile.php?id=61586367822913" target="_blank" style="color:#1877F2;">📘</a>
 </div>
+
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+// دخول التطبيق
 function enterApp(){
     document.getElementById('welcomeScreen').style.display='none';
     document.getElementById('mainApp').style.display='flex';
 }
+
 // تحميل الشعار
 function loadLogo(e){
     const reader=new FileReader();
     reader.onload=()=>logoPreview.src=reader.result;
     reader.readAsDataURL(e.target.files[0]);
 }
-// أيقونات حسب القالب
+
+// أيقونات القوالب
 const templateIcons = {
+    "": "", 
     vet:"https://img.icons8.com/emoji/48/000000/paw-prints.png",
     law:"https://img.icons8.com/emoji/48/000000/balance-scale.png",
     hair:"https://img.icons8.com/emoji/48/000000/haircut.png",
@@ -305,17 +323,15 @@ const templateIcons = {
     translation:"https://img.icons8.com/emoji/48/000000/book.png",
     pharmacy:"https://img.icons8.com/emoji/48/000000/pill.png",
     glass:"https://img.icons8.com/emoji/48/000000/glass.png",
-    dentist:"https://img.icons8.com/emoji/48/000000/tooth.png"
+    dentist:"https://img.icons8.com/emoji/48/000000/tooth.png",
+    oilSale:"https://img.icons8.com/emoji/48/000000/oil-drum.png"
 };
+
 function updateTemplate(){
     const selected = templateSelect.value;
-    if(selected === "none"){
-        templateIcon.style.display = "none";
-    } else {
-        templateIcon.style.display = "block";
-        templateIcon.src = templateIcons[selected] || "";
-    }
+    templateIcon.src = templateIcons[selected] || "";
 }
+
 // تحديث البطاقة
 function generateCard(){
     companyDisplay.innerText=company.value;
@@ -324,6 +340,7 @@ function generateCard(){
     descDisplay.innerText=desc.value;
     phoneDisplay.innerText="📞 "+phone.value;
     updateTemplate();
+
     const vcard=`BEGIN:VCARD
 VERSION:3.0
 FN:${person.value}
@@ -332,6 +349,7 @@ TITLE:${job.value}
 TEL:${phone.value}
 NOTE:${desc.value}
 END:VCARD`;
+
     qrcode.innerHTML="";
     new QRCode(qrcode,{
         text:vcard,
@@ -339,6 +357,7 @@ END:VCARD`;
         height:55
     });
 }
+
 // تحديث الألوان
 function updateColors(){
     rightSide.style.background=rightColorSelect.value;
@@ -347,6 +366,7 @@ function updateColors(){
     personDisplay.style.color=textColorSelect.value;
     jobDisplay.style.color=textColorSelect.value;
 }
+
 // تحميل البطاقة
 function downloadCard(){
     html2canvas(card).then(canvas=>{
@@ -356,6 +376,7 @@ function downloadCard(){
         link.click();
     });
 }
+
 // إعدادات افتراضية
 updateTemplate();
 updateColors();
