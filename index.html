@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ali Cards Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+html, body{
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:'Cairo',sans-serif;
+    background:#f0f0f0;
+}
+body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    width:100%;
+    min-height:100vh;
+    box-sizing:border-box;
+}
+
+/* شاشة الترحيب */
+#welcomeScreen{
+    position:fixed;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    background: linear-gradient(135deg,#ffffff 0%,#4caf50 50%,#f44336 100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+    text-align:center;
+}
+#welcomeScreen div{
+    color:red;
+    font-size:4vw;
+    font-weight:bold;
+    margin-bottom:30px;
+}
+#welcomeScreen button{
+    padding:14px 25px;
+    font-size:1.5em;
+    cursor:pointer;
+    background:linear-gradient(45deg,#ff9800,#ff5722);
+    color:white;
+    border:none;
+    border-radius:10px;
+}
+/* الحاوية الرئيسية */
+.container{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    width:100%;
+    min-height:100vh;
+    box-sizing:border-box;
+    padding:10px;
+}
+/* البطاقة */
+.card{
+    width:90%;
+    max-width:400px;
+    height:220px;
+    margin:20px auto 10px auto;
+    display:flex;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    position:relative;
+    transition:0.3s;
+    background: linear-gradient(135deg,#4caf50 0%,#ffffff 50%,#f44336 100%);
+}
+.left{
+    width:40%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:10px;
+    text-align:center;
+}
+.left img{
+    width:60px;
+    margin-bottom:6px;
+}
+.right{
+    width:60%;
+    color:#fff;
+    padding:12px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:right;
+    position:relative;
+    transition:0.3s;
+}
+.right h2{
+    margin:0;
+    font-size:16px;
+    font-weight:800;
+}
+.right p{
+    margin:3px 0;
+    font-size:12px;
+}
+#qrcode{
+    position:absolute;
+    bottom:8px;
+    left:8px;
+    background:#fff;
+    padding:4px;
+    border-radius:6px;
+}
+/* الأزرار تحت البطاقة */
+.card-buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:15px;
+}
+.card-buttons button{
+    flex:1;
+    max-width:180px;
+    padding:10px;
+}
+/* الفورم */
+.form{
+    background:#fff;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    margin-bottom:20px;
+    width:90%;
+    max-width:400px;
+    box-sizing:border-box;
+}
+input,textarea,select{
+    width:100%;
+    padding:8px;
+    margin:6px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+/* اختيار الألوان */
+.color-picker{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:6px 0;
+    padding:5px 8px;
+    border:2px solid #2196f3;
+    border-radius:8px;
+    background:linear-gradient(90deg,#bbdefb,#e3f2fd);
+    font-size:0.9em;
+}
+.color-picker label{
+    font-weight:bold;
+}
+.color-picker select{
+    width:50%;
+}
+/* أيقونات التواصل */
+#socialLinks{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    font-size:3em;
+    margin-top:10px;
+}
+#socialLinks a{
+    transition: transform 0.3s;
+}
+#socialLinks a:hover{
+    transform: scale(1.2);
+}
+</style>
+</head>
+<body>
+<!-- شاشة الترحيب -->
+<div id="welcomeScreen">
+    <div>مرحبا بكم في قوالب Ali.dz</div>
+    <button onclick="enterApp()">دخول</button>
+</div>
+<!-- الحاوية الرئيسية -->
+<div class="container" id="mainApp">
+
+<!-- البطاقة -->
+<div class="card" id="card">
+    <div class="left" id="leftSide">
+        <img id="logoPreview">
+        <h3 id="personDisplay">اسم الشخص</h3>
+        <p id="jobDisplay">المنصب</p>
+    </div>
+    <div class="right" id="rightSide">
+        <img id="templateIcon" style="width:40px;position:absolute;top:10px;right:10px;">
+        <h2 id="companyDisplay">اسم المؤسسة</h2>
+        <p id="descDisplay"></p>
+        <p id="phoneDisplay"></p>
+        <div id="qrcode"></div>
+    </div>
+</div>
+<!-- أزرار البطاقة -->
+<div class="card-buttons">
+    <button onclick="generateCard()">تحديث البطاقة</button>
+    <button onclick="downloadCard()">تحميل PNG</button>
+</div>
+<!-- الفورم -->
+<div class="form">
+<input id="company" placeholder="اسم المؤسسة">
+<input id="person" placeholder="اسم الشخص">
+<input id="job" placeholder="المنصب">
+<input id="phone" placeholder="الهاتف">
+<textarea id="desc" placeholder="وصف مختصر"></textarea>
+<label>رفع شعار البطاقة</label>
+<input type="file" accept="image/*" onchange="loadLogo(event)">
+<div class="color-picker">
+<label>لون الجهة اليمنى</label>
+<select id="rightColorSelect" onchange="updateColors()">
+<option value="#007bff">أزرق</option>
+<option value="#4caf50">أخضر</option>
+<option value="#f44336">أحمر</option>
+<option value="#ff9800">برتقالي</option>
+<option value="#9c27b0">بنفسجي</option>
+<option value="#607d8b">رمادي</option>
+</select>
+</div>
+<div class="color-picker">
+<label>لون الجهة اليسرى</label>
+<select id="leftColorSelect" onchange="updateColors()">
+<option value="#ffffff">أبيض</option>
+<option value="#f1f1f1">رمادي فاتح</option>
+<option value="#ffe0b2">برتقالي فاتح</option>
+<option value="#c8e6c9">أخضر فاتح</option>
+</select>
+</div>
+<div class="color-picker">
+<label>لون النص</label>
+<select id="textColorSelect" onchange="updateColors()">
+<option value="#ffffff">أبيض</option>
+<option value="#000000">أسود</option>
+<option value="#ffeb3b">أصفر</option>
+<option value="#f44336">أحمر</option>
+<option value="#4caf50">أخضر</option>
+</select>
+</div>
+<div class="color-picker">
+<label>اختيار قالب المؤسسة</label>
+<select id="templateSelect" onchange="updateTemplate()">
+<option value="none">لا شيء</option>
+<option value="vet">بيطرية</option>
+<option value="law">محاماة</option>
+<option value="hair">حلاقة</option>
+<option value="clinic">عيادة</option>
+<option value="wedding">زفاف</option>
+<option value="sweets">حلويات</option>
+<option value="mechanic">ميكانيكي</option>
+<option value="plumber">بلومبي</option>
+<option value="construction">بناء</option>
+<option value="translation">ترجمة</option>
+<option value="pharmacy">صيدلة</option>
+<option value="glass">زجاج</option>
+<option value="dentist">طب أسنان</option>
+</select>
+</div>
+</div>
+<!-- أيقونات التواصل -->
+<div id="socialLinks">
+    <a href="https://wa.me/2136671720653" target="_blank" style="color:#25D366;">📱</a>
+    <a href="mailto:algeriancitizen14@gmail.com" style="color:#D44638;">✉️</a>
+    <a href="https://www.facebook.com/profile.php?id=61586367822913" target="_blank" style="color:#1877F2;">📘</a>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function enterApp(){
+    document.getElementById('welcomeScreen').style.display='none';
+    document.getElementById('mainApp').style.display='flex';
+}
+// تحميل الشعار
+function loadLogo(e){
+    const reader=new FileReader();
+    reader.onload=()=>logoPreview.src=reader.result;
+    reader.readAsDataURL(e.target.files[0]);
+}
+// أيقونات حسب القالب
+const templateIcons = {
+    vet:"https://img.icons8.com/emoji/48/000000/paw-prints.png",
+    law:"https://img.icons8.com/emoji/48/000000/balance-scale.png",
+    hair:"https://img.icons8.com/emoji/48/000000/haircut.png",
+    clinic:"https://img.icons8.com/emoji/48/000000/hospital.png",
+    wedding:"https://img.icons8.com/emoji/48/000000/wedding.png",
+    sweets:"https://img.icons8.com/emoji/48/000000/candy.png",
+    mechanic:"https://img.icons8.com/emoji/48/000000/wrench.png",
+    plumber:"https://img.icons8.com/emoji/48/000000/plumber.png",
+    construction:"https://img.icons8.com/emoji/48/000000/building-construction.png",
+    translation:"https://img.icons8.com/emoji/48/000000/book.png",
+    pharmacy:"https://img.icons8.com/emoji/48/000000/pill.png",
+    glass:"https://img.icons8.com/emoji/48/000000/glass.png",
+    dentist:"https://img.icons8.com/emoji/48/000000/tooth.png"
+};
+function updateTemplate(){
+    const selected = templateSelect.value;
+    if(selected === "none"){
+        templateIcon.style.display = "none";
+    } else {
+        templateIcon.style.display = "block";
+        templateIcon.src = templateIcons[selected] || "";
+    }
+}
+// تحديث البطاقة
+function generateCard(){
+    companyDisplay.innerText=company.value;
+    personDisplay.innerText=person.value;
+    jobDisplay.innerText=job.value;
+    descDisplay.innerText=desc.value;
+    phoneDisplay.innerText="📞 "+phone.value;
+    updateTemplate();
+    const vcard=`BEGIN:VCARD
+VERSION:3.0
+FN:${person.value}
+ORG:${company.value}
+TITLE:${job.value}
+TEL:${phone.value}
+NOTE:${desc.value}
+END:VCARD`;
+    qrcode.innerHTML="";
+    new QRCode(qrcode,{
+        text:vcard,
+        width:55,
+        height:55
+    });
+}
+// تحديث الألوان
+function updateColors(){
+    rightSide.style.background=rightColorSelect.value;
+    leftSide.style.background=leftColorSelect.value;
+    rightSide.style.color=textColorSelect.value;
+    personDisplay.style.color=textColorSelect.value;
+    jobDisplay.style.color=textColorSelect.value;
+}
+// تحميل البطاقة
+function downloadCard(){
+    html2canvas(card).then(canvas=>{
+        const link=document.createElement("a");
+        link.download="business-card.png";
+        link.href=canvas.toDataURL();
+        link.click();
+    });
+}
+// إعدادات افتراضية
+updateTemplate();
+updateColors();
+</script>
+</body>
+</html>
